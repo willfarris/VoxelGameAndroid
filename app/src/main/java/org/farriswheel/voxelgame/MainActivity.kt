@@ -33,8 +33,10 @@ class MainActivity : AppCompatActivity() {
         surface.setEGLContextClientVersion(2)
         surface.setRenderer(VoxelRenderer())
         surface.setOnTouchListener { v, event ->
-            Log.w("Touch", "${event.rawX}")
-            RustInterface.setXY(event.rawX, event.rawY)
+            val xpct = event.rawX/surface.width
+            val ypct = event.rawY/surface.height
+            Log.w("Touch", "($xpct, $ypct)")
+            RustInterface.setXY(xpct, ypct)
             true
         }
         rendererSet = true
