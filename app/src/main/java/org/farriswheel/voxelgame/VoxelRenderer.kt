@@ -6,7 +6,9 @@ import android.opengl.GLSurfaceView
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class VoxelRenderer : GLSurfaceView.Renderer {
+class VoxelRenderer(private val startTime: Long) : GLSurfaceView.Renderer {
+
+
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         RustInterface.onSurfaceCreated()
     }
@@ -16,7 +18,7 @@ class VoxelRenderer : GLSurfaceView.Renderer {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        RustInterface.onDrawFrame()
+        RustInterface.onDrawFrame((System.currentTimeMillis() - startTime).toFloat() / 1000f)
     }
 
 }

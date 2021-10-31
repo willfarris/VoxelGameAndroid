@@ -13,6 +13,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import org.farriswheel.voxelgame.RustInterface.Companion.engineTick
+import java.lang.Float.max
+import java.lang.Float.min
 import kotlin.concurrent.thread
 
 
@@ -27,6 +29,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var surface: GLSurfaceView
     private lateinit var debugString: TextView
     private var rendererSet = false
+
+    private fun invSqrt(x: Float): Float {
+        var x = x
+        val xhalf = 0.5f * x
+        var i = java.lang.Float.floatToIntBits(x)
+        i = 0x5f3759df - (i shr 1)
+        x = java.lang.Float.intBitsToFloat(i)
+        x *= 1.5f - xhalf * x * x
+        return x
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
         surface = findViewById(R.id.surfaceView)
         surface.setEGLContextClientVersion(2)
-        surface.setRenderer(VoxelRenderer())
+        surface.setRenderer(VoxelRenderer(System.currentTimeMillis()))
 
         var touchStartX: Float? = null
         var touchStartY: Float? = null
@@ -74,13 +86,13 @@ class MainActivity : AppCompatActivity() {
 
         val moveJoystick = findViewById<ImageView>(R.id.moveJoystick)
         moveJoystick.setOnTouchListener { v, event ->
-            Log.w("BUTTON", "${event.action}")
             when(event.action) {
                 1 -> RustInterface.stopMoving()
                 else -> {
-                    val dx = 4.0f * ((event.x / moveJoystick.width) - 0.5f)
-                    val dz = 4.0f * ((event.y / moveJoystick.height) - 0.5f)
-                    RustInterface.moveAround(dx, 0.0f, -dz)
+                    val dx = (event.x / moveJoystick.width) - 0.5f
+                    val dz = (event.y / moveJoystick.height) - 0.5f
+                    val a = invSqrt((dx * dx) + (dz * dz))
+                    RustInterface.moveAround(dx * a, 0.0f, -dz * a)
                 }
             }
 
@@ -108,6 +120,15 @@ class MainActivity : AppCompatActivity() {
         if (rendererSet) {
             surface.onResume()
         }
+        if (supportActionBar != null) {
+            supportActionBar!!.hide()
+        }
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
 
 

@@ -27,6 +27,6 @@ class RustInterface {
         external fun onSurfaceChanged()
 
         @JvmStatic
-        external fun onDrawFrame()
+        external fun onDrawFrame(elapsed_time: Float)
     }
 }
