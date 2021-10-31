@@ -9,7 +9,16 @@ class RustInterface {
         external fun test(): String
 
         @JvmStatic
-        external fun setXY(nx: Float, ny: Float)
+        external fun lookAround(dx: Float, dy: Float)
+
+        @JvmStatic
+        external fun moveAround(dx: Float, dy: Float, dz: Float)
+
+        @JvmStatic
+        external fun stopMoving()
+
+        @JvmStatic
+        external fun engineTick()
 
         @JvmStatic
         external fun onSurfaceCreated()
