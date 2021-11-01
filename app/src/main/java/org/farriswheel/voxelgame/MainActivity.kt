@@ -3,18 +3,11 @@ package org.farriswheel.voxelgame
 import android.annotation.SuppressLint
 import android.opengl.GLSurfaceView
 import android.os.Bundle
-import android.util.Log
-import android.view.DragEvent
-import android.view.MotionEvent
 import android.view.View
-import android.view.WindowInsetsController
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import org.farriswheel.voxelgame.RustInterface.Companion.engineTick
-import java.lang.Float.max
-import java.lang.Float.min
 import kotlin.concurrent.thread
 
 
@@ -56,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         surface = findViewById(R.id.surfaceView)
         surface.setEGLContextClientVersion(2)
-        surface.setRenderer(VoxelRenderer(System.currentTimeMillis()))
+        surface.setRenderer(VoxelEngine(System.currentTimeMillis()))
 
         var touchStartX: Float? = null
         var touchStartY: Float? = null
@@ -74,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                 2 -> {
                     val dx = 0.002f * (event.x - touchStartX!!)
                     val dy = 0.002f  * (event.y - touchStartY!!)
-                    RustInterface.lookAround(dx, dy)
+                    VoxelEngine.lookAround(dx, dy)
                     touchStartX = event.x
                     touchStartY = event.y
                 }
@@ -87,12 +80,12 @@ class MainActivity : AppCompatActivity() {
         val moveJoystick = findViewById<ImageView>(R.id.moveJoystick)
         moveJoystick.setOnTouchListener { v, event ->
             when(event.action) {
-                1 -> RustInterface.stopMoving()
+                1 -> VoxelEngine.stopMoving()
                 else -> {
                     val dx = (event.x / moveJoystick.width) - 0.5f
                     val dz = (event.y / moveJoystick.height) - 0.5f
                     val a = invSqrt((dx * dx) + (dz * dz))
-                    RustInterface.moveAround(dx * a, 0.0f, -dz * a)
+                    VoxelEngine.moveAround(dx * a, 0.0f, -dz * a)
                 }
             }
 
@@ -102,10 +95,19 @@ class MainActivity : AppCompatActivity() {
         val jumpButton = findViewById<Button>(R.id.jumpButton)
         jumpButton.setOnTouchListener { v, event ->
             if(event.action == 0) {
-                RustInterface.moveAround(0.0f, 1.5f, 0.0f)
+                VoxelEngine.moveAround(0.0f, 1.5f, 0.0f)
             }
             true
         }
+
+        /*thread {
+            var lastTime = System.nanoTime()
+            while(true) {
+                val curTime = System.nanoTime()
+                VoxelEngine.tick((curTime - lastTime) * 0.0001f)
+                lastTime = curTime
+            }
+        }*/
     }
 
     override fun onPause() {
