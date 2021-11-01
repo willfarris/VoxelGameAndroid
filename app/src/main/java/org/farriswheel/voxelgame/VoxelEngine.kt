@@ -15,17 +15,19 @@ class VoxelEngine(private val startTime: Long) : GLSurfaceView.Renderer {
         @JvmStatic
         external fun stopMoving()
         @JvmStatic
-        external fun tick(delta_time: Float)
+        external fun tick(elapsed_time: Float)
         @JvmStatic
-        external fun voxelOnSurfaceCreated(gl: GL10?, config: EGLConfig?)
+        external fun voxelOnSurfaceCreated(gl: GL10?, config: EGLConfig?, start_time: Long)
         @JvmStatic
         external fun voxelOnSurfaceChanged(gl: GL10?, width: Int, height: Int)
         @JvmStatic
         external fun voxelOnDrawFrame(gl: GL10?, elapsed_time: Float)
+
+        val startTime = System.nanoTime()
     }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        voxelOnSurfaceCreated(gl, config)
+        voxelOnSurfaceCreated(gl, config, startTime)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {

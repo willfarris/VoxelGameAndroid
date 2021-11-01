@@ -3,6 +3,7 @@ package org.farriswheel.voxelgame
 import android.annotation.SuppressLint
 import android.opengl.GLSurfaceView
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -101,11 +102,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         /*thread {
-            var lastTime = System.nanoTime()
-            while(true) {
-                val curTime = System.nanoTime()
-                VoxelEngine.tick((curTime - lastTime) * 0.0001f)
-                lastTime = curTime
+            while (true) {
+                val curTime = System.nanoTime().toFloat() * 0.000000001f
+                Log.w("curtime", "$curTime")
+                VoxelEngine.tick(curTime)
             }
         }*/
     }
