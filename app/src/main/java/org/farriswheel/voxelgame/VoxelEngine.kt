@@ -4,37 +4,52 @@ import android.opengl.GLSurfaceView
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class VoxelEngine(private val startTime: Long) : GLSurfaceView.Renderer {
+abstract class VoxelEngine {
     companion object {
         @JvmStatic
         external fun test(): String
+
+
+        /* Player controls */
         @JvmStatic
         external fun lookAround(dx: Float, dy: Float)
         @JvmStatic
         external fun moveAround(dx: Float, dy: Float, dz: Float)
         @JvmStatic
         external fun stopMoving()
+
+
+        /* Engine Functionality */
         @JvmStatic
-        external fun tick(elapsed_time: Float)
+        external fun initEngine(startTime: Float)
         @JvmStatic
-        external fun voxelOnSurfaceCreated(gl: GL10?, config: EGLConfig?, start_time: Long)
+        external fun tick(elapsedTime: Float)
+
+
+        /* GL Functions */
+        @JvmStatic
+        external fun voxelOnSurfaceCreated(gl: GL10?, config: EGLConfig?)
         @JvmStatic
         external fun voxelOnSurfaceChanged(gl: GL10?, width: Int, height: Int)
         @JvmStatic
         external fun voxelOnDrawFrame(gl: GL10?, elapsed_time: Float)
 
-        val startTime = System.nanoTime()
+        var startTime = System.nanoTime()
     }
 
+
+}
+
+class VoxelEngineRenderer(private val startTime: Long) : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        voxelOnSurfaceCreated(gl, config, startTime)
+        VoxelEngine.voxelOnSurfaceCreated(gl, config)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        voxelOnSurfaceChanged(gl, width, height)
+        VoxelEngine.voxelOnSurfaceChanged(gl, width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        voxelOnDrawFrame(gl, (System.currentTimeMillis() - startTime).toFloat() / 1000f)
+        VoxelEngine.voxelOnDrawFrame(gl, (System.currentTimeMillis() - startTime).toFloat() / 1000f)
     }
 }
