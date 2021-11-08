@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
 
         surface = findViewById(R.id.surfaceView)
-        surface.setEGLContextClientVersion(2)
-        surface.setRenderer(VoxelEngine(System.currentTimeMillis()))
+        surface.setEGLContextClientVersion(3)
+        surface.setRenderer(VoxelEngineRenderer(System.currentTimeMillis()))
 
         var touchStartX: Float? = null
         var touchStartY: Float? = null
@@ -99,6 +99,11 @@ class MainActivity : AppCompatActivity() {
                 VoxelEngine.moveAround(0.0f, 1.5f, 0.0f)
             }
             true
+        }
+
+        val breakButton = findViewById<Button>(R.id.breakButton)
+        breakButton.setOnClickListener {
+            runOnUiThread { VoxelEngine.breakBlock() }
         }
 
         /*thread {
