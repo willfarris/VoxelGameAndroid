@@ -48,9 +48,11 @@ class MainActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
 
+
+        val renderer = VoxelEngineRenderer()
         surface = findViewById(R.id.surfaceView)
         surface.setEGLContextClientVersion(3)
-        surface.setRenderer(VoxelEngineRenderer(System.currentTimeMillis()))
+        surface.setRenderer(renderer)
 
         var touchStartX: Float? = null
         var touchStartY: Float? = null
@@ -106,13 +108,12 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread { VoxelEngine.breakBlock() }
         }
 
-        /*thread {
+        thread {
             while (true) {
-                val curTime = System.nanoTime().toFloat() * 0.000000001f
-                Log.w("curtime", "$curTime")
+                val curTime = System.currentTimeMillis()
                 VoxelEngine.tick(curTime)
             }
-        }*/
+        }
     }
 
     override fun onPause() {

@@ -22,9 +22,9 @@ abstract class VoxelEngine {
 
         /* Engine Functionality */
         @JvmStatic
-        external fun initEngine(startTime: Long)
+        external fun startEngine(startTime: Long)
         @JvmStatic
-        external fun tick(elapsedTime: Float)
+        external fun tick(elapsedTime: Long)
         @JvmStatic
         external fun breakBlock()
 
@@ -33,7 +33,7 @@ abstract class VoxelEngine {
         @JvmStatic
         external fun voxelOnSurfaceCreated(gl: GL10?, config: EGLConfig?, startTimeMs: Long): String
         @JvmStatic
-        external fun voxelOnSurfaceChanged(gl: GL10?, width: Int, height: Int)
+        external fun voxelOnSurfaceChanged(width: Int, height: Int)
         @JvmStatic
         external fun voxelOnDrawFrame(gl: GL10?, elapsedTime: Float)
 
@@ -43,13 +43,19 @@ abstract class VoxelEngine {
 
 }
 
-class VoxelEngineRenderer(private val startTimeMs: Long) : GLSurfaceView.Renderer {
+class VoxelEngineRenderer : GLSurfaceView.Renderer {
+
+    var isReady = false
+    var startTimeMs = System.currentTimeMillis()
+
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        Log.w("Engine: ", VoxelEngine.voxelOnSurfaceCreated(gl, config, startTimeMs))
+
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        //VoxelEngine.voxelOnSurfaceChanged(gl, width, height)
+        VoxelEngine.voxelOnSurfaceChanged(height, height)
+        VoxelEngine.startEngine(System.currentTimeMillis())
+        isReady = true
     }
 
     override fun onDrawFrame(gl: GL10?) {
