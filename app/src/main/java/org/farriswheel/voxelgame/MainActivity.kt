@@ -1,6 +1,9 @@
 package org.farriswheel.voxelgame
 
 import android.annotation.SuppressLint
+import android.opengl.EGL14
+import android.opengl.EGL14.eglCreateContext
+import android.opengl.EGL15
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +12,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
@@ -51,6 +53,9 @@ class MainActivity : AppCompatActivity() {
         surface = findViewById(R.id.surfaceView)
         surface.setEGLContextClientVersion(3)
         surface.setRenderer(VoxelEngineRenderer(System.currentTimeMillis()))
+        //val ctx = EGL14.eglGetCurrentContext()
+
+        //val x = eglCreateContext(display, null, )
 
         var touchStartX: Float? = null
         var touchStartY: Float? = null
