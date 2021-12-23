@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         val jumpButton = findViewById<Button>(R.id.jumpButton)
         jumpButton.setOnTouchListener { v, event ->
             if(event.action == 0) {
-                VoxelEngine.moveAround(0.0f, 1.5f, 0.0f)
+                VoxelEngine.playerJump()
             }
             true
         }

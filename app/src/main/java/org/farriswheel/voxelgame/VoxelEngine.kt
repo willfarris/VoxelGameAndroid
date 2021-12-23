@@ -18,6 +18,8 @@ abstract class VoxelEngine {
         external fun moveAround(dx: Float, dy: Float, dz: Float)
         @JvmStatic
         external fun stopMoving()
+        @JvmStatic
+        external fun playerJump()
 
 
         /* Engine Functionality */
