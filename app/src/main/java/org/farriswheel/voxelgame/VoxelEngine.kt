@@ -24,11 +24,15 @@ abstract class VoxelEngine {
 
         /* Engine Functionality */
         @JvmStatic
+        external fun initLogs()
+        @JvmStatic
         external fun initEngine()
         @JvmStatic
         external fun tick(elapsedTime: Float)
         @JvmStatic
         external fun breakBlock()
+        @JvmStatic
+        external fun placeBlock()
 
 
         /* GL Functions */

@@ -50,6 +50,8 @@ class MainActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
 
+        VoxelEngine.initLogs()
+
         surface = findViewById(R.id.surfaceView)
         surface.setEGLContextClientVersion(3)
         surface.setRenderer(VoxelEngineRenderer(System.currentTimeMillis()))
@@ -109,6 +111,11 @@ class MainActivity : AppCompatActivity() {
         val breakButton = findViewById<Button>(R.id.breakButton)
         breakButton.setOnClickListener {
             runOnUiThread { VoxelEngine.breakBlock() }
+        }
+
+        val placeButton = findViewById<Button>(R.id.placeButton)
+        placeButton.setOnClickListener {
+            runOnUiThread { VoxelEngine.placeBlock() }
         }
 
         /*thread {
