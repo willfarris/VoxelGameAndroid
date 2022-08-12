@@ -50,11 +50,9 @@ class MainActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
 
-        VoxelEngine.initLogs()
-
         surface = findViewById(R.id.surfaceView)
         surface.setEGLContextClientVersion(3)
-        surface.setRenderer(VoxelEngineRenderer(System.currentTimeMillis()))
+        surface.setRenderer(VoxelEngineRenderer())
         //val ctx = EGL14.eglGetCurrentContext()
 
         //val x = eglCreateContext(display, null, )
@@ -75,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 2 -> {
                     val dx = 0.002f * (event.x - touchStartX!!)
                     val dy = 0.002f  * (event.y - touchStartY!!)
-                    VoxelEngine.lookAround(dx, dy)
+                    VoxelEngine.lookAround(VoxelEngine.mEngine, dx, dy)
                     touchStartX = event.x
                     touchStartY = event.y
                 }
@@ -88,12 +86,12 @@ class MainActivity : AppCompatActivity() {
         val moveJoystick = findViewById<ImageView>(R.id.moveJoystick)
         moveJoystick.setOnTouchListener { v, event ->
             when(event.action) {
-                1 -> VoxelEngine.stopMoving()
+                1 -> VoxelEngine.stopMoving(VoxelEngine.mEngine)
                 else -> {
                     val dx = (event.x / moveJoystick.width) - 0.5f
                     val dz = (event.y / moveJoystick.height) - 0.5f
                     val a = invSqrt((dx * dx) + (dz * dz))
-                    VoxelEngine.moveAround(dx * a, 0.0f, -dz * a)
+                    VoxelEngine.moveAround(VoxelEngine.mEngine, dx * a, 0.0f, -dz * a)
                 }
             }
 
@@ -103,28 +101,20 @@ class MainActivity : AppCompatActivity() {
         val jumpButton = findViewById<Button>(R.id.jumpButton)
         jumpButton.setOnTouchListener { v, event ->
             if(event.action == 0) {
-                VoxelEngine.playerJump()
+                VoxelEngine.playerJump(VoxelEngine.mEngine)
             }
             true
         }
 
         val breakButton = findViewById<Button>(R.id.breakButton)
         breakButton.setOnClickListener {
-            runOnUiThread { VoxelEngine.breakBlock() }
+            //runOnUiThread { VoxelEngine.breakBlock() }
         }
 
         val placeButton = findViewById<Button>(R.id.placeButton)
         placeButton.setOnClickListener {
-            runOnUiThread { VoxelEngine.placeBlock() }
+            //runOnUiThread { VoxelEngine.placeBlock() }
         }
-
-        /*thread {
-            while (true) {
-                val curTime = System.nanoTime().toFloat() * 0.000000001f
-                Log.w("curtime", "$curTime")
-                VoxelEngine.tick(curTime)
-            }
-        }*/
     }
 
     override fun onPause() {
