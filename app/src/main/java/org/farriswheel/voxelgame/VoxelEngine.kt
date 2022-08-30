@@ -15,6 +15,10 @@ abstract class VoxelEngine {
         external fun initEngine(width: Int, height: Int, seed: Int, chunkRadius: Long): Long
         @JvmStatic
         external fun update(engine: Long, deltaTime: Float)
+        @JvmStatic
+        external fun pauseGame(engine: Long)
+        @JvmStatic
+        external fun resumeGame(engine: Long)
 
         @JvmStatic
         external fun test(): String
@@ -29,6 +33,10 @@ abstract class VoxelEngine {
         external fun stopMoving(engine: Long)
         @JvmStatic
         external fun playerJump(engine: Long)
+        @JvmStatic
+        external fun breakBlock(engine: Long)
+        @JvmStatic
+        external fun placeBlock(engine: Long)
     }
 
 
@@ -40,15 +48,12 @@ class VoxelEngineRenderer() : GLSurfaceView.Renderer {
     }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        if (gl != null) {
-            gl.glEnable(GL10.GL_DEPTH_BITS)
-            gl.glEnable(GL10.GL_DEPTH_BUFFER_BIT)
-            gl.glEnable(GL10.GL_DEPTH_TEST)
-        }
-     }
+        //TODO: Get a better way of setting width and height
+        // Note: This are the screen dimensions of a Pixel 5a
+        VoxelEngine.mEngine = VoxelEngine.initEngine(2400, 1080, 69, 5)
+    }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        VoxelEngine.mEngine = VoxelEngine.initEngine(width, height, 69, 5)
         startTime = System.nanoTime()
     }
 
