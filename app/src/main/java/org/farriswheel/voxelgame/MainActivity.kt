@@ -13,14 +13,9 @@ import androidx.appcompat.content.res.AppCompatResources
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        init {
-            System.loadLibrary("voxel")
-        }
-    }
-
     private lateinit var surface: GLSurfaceView
     private lateinit var debugString: TextView
+    private lateinit var voxelEngine: VoxelEngine
     private var rendererSet = false
 
     private fun invSqrt(x: Float): Float {
@@ -41,9 +36,11 @@ class MainActivity : AppCompatActivity() {
             supportActionBar!!.hide()
         }
 
+        voxelEngine = (this.application as VoxelGameApplication).mVoxelEngine
+
         surface = findViewById(R.id.surfaceView)
         surface.setEGLContextClientVersion(3)
-        surface.setRenderer(VoxelEngineRenderer())
+        surface.setRenderer(voxelEngine)
 
         var touchStartX: Float? = null
         var touchStartY: Float? = null
@@ -60,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                 2 -> {
                     val dx = 0.002f * (event.x - touchStartX!!)
                     val dy = 0.002f  * (event.y - touchStartY!!)
-                    VoxelEngine.lookAround(VoxelEngine.mEngine, dy, dx)
+                    voxelEngine.lookAround(dx, dy)
                     touchStartX = event.x
                     touchStartY = event.y
                 }
@@ -72,45 +69,49 @@ class MainActivity : AppCompatActivity() {
         val moveJoystick = findViewById<ImageView>(R.id.moveJoystick)
         moveJoystick?.setOnTouchListener { v, event ->
             when(event.action) {
-                1 -> VoxelEngine.stopMoving(VoxelEngine.mEngine)
+                1 -> voxelEngine.stopMoving()
                 else -> {
                     val dx = (event.x / moveJoystick.width) - 0.5f
                     val dz = (event.y / moveJoystick.height) - 0.5f
                     val a = invSqrt((dx * dx) + (dz * dz))
-                    VoxelEngine.moveAround(VoxelEngine.mEngine, dx * a, 0.0f, -dz * a)
+                    voxelEngine.moveAround(dx * a, 0.0f, -dz * a)
                 }
             }
-
             true
         }
 
         val jumpButton = findViewById<Button>(R.id.jumpButton)
         jumpButton?.setOnTouchListener { v, event ->
             if(event.action == 0) {
-                VoxelEngine.playerJump(VoxelEngine.mEngine)
+                voxelEngine.playerJump()
             }
             true
         }
 
         val breakButton = findViewById<Button>(R.id.breakButton)
         breakButton?.setOnClickListener {
-            VoxelEngine.breakBlock(VoxelEngine.mEngine)
+            voxelEngine.breakBlock()
         }
 
         val placeButton = findViewById<Button>(R.id.placeButton)
         placeButton?.setOnClickListener {
-            VoxelEngine.placeBlock(VoxelEngine.mEngine)
+            voxelEngine.placeBlock()
         }
 
         val pauseButton = findViewById<Button>(R.id.pauseButton)
-        var isPaused = false
+        var isPaused = voxelEngine.isPaused()
+        if (isPaused) {
+            pauseButton?.background = AppCompatResources.getDrawable(applicationContext, R.drawable.ic_baseline_pause_circle_outline_24)
+        } else {
+            pauseButton?.background = AppCompatResources.getDrawable(applicationContext, R.drawable.ic_baseline_play_circle_outline_24)
+        }
         pauseButton?.setOnClickListener {
             isPaused = if (isPaused) {
-                VoxelEngine.resumeGame(VoxelEngine.mEngine)
+                voxelEngine.resumeGame()
                 pauseButton.background = AppCompatResources.getDrawable(applicationContext, R.drawable.ic_baseline_pause_circle_outline_24)
                 false
             } else {
-                VoxelEngine.pauseGame(VoxelEngine.mEngine)
+                voxelEngine.pauseGame()
                 pauseButton.background = AppCompatResources.getDrawable(applicationContext, R.drawable.ic_baseline_play_circle_outline_24)
                 true
             }
@@ -121,7 +122,7 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         if (rendererSet) {
             surface.onPause()
-            VoxelEngine.pauseGame(VoxelEngine.mEngine)
+            //voxelEngine.pauseGame()
         }
     }
 
@@ -129,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         if (rendererSet) {
             surface.onResume()
-            VoxelEngine.resumeGame(VoxelEngine.mEngine)
+            //voxelEngine.resumeGame()
         }
         if (supportActionBar != null) {
             supportActionBar!!.hide()

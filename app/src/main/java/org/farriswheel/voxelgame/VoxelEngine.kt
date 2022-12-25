@@ -5,61 +5,103 @@ import android.util.Log
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-abstract class VoxelEngine {
+class VoxelEngine : GLSurfaceView.Renderer {
 
-    companion object {
-        var mEngine: Long = 0
+    private var ptr: Long = 0
+    private var startTime: Long = 0
 
-        /* Engine Functionality */
-        @JvmStatic
-        external fun initEngine(width: Int, height: Int, seed: Int, chunkRadius: Long): Long
-        @JvmStatic
-        external fun update(engine: Long, deltaTime: Float)
-        @JvmStatic
-        external fun pauseGame(engine: Long)
-        @JvmStatic
-        external fun resumeGame(engine: Long)
+    init {
+        ptr = initEngineNative()
+    }
+
+    private companion object {
 
         @JvmStatic
-        external fun test(): String
+        external fun initEngineNative(): Long
+        @JvmStatic
+        external fun initGLNative(ptr: Long, width: Int, height: Int)
+        @JvmStatic
+        external fun updateNative(ptr: Long, deltaTime: Float)
+        @JvmStatic
+        external fun drawFrameNative(ptr: Long)
+        @JvmStatic
+        external fun setColorNative(ptr: Long, red: Float, green: Float, blue: Float)
 
+        @JvmStatic
+        external fun pauseGameNative(ptr: Long)
+        @JvmStatic
+        external fun resumeGameNative(ptr: Long)
+        @JvmStatic
+        external fun isPausedNative(ptr: Long): Boolean
 
         /* Player controls */
         @JvmStatic
-        external fun lookAround(engine: Long, dx: Float, dy: Float)
+        external fun lookAroundNative(engine: Long, dx: Float, dy: Float)
         @JvmStatic
-        external fun moveAround(engine: Long, dx: Float, dy: Float, dz: Float)
+        external fun moveAroundNative(engine: Long, dx: Float, dy: Float, dz: Float)
         @JvmStatic
-        external fun stopMoving(engine: Long)
+        external fun stopMovingNative(engine: Long)
         @JvmStatic
-        external fun playerJump(engine: Long)
+        external fun playerJumpNative(engine: Long)
         @JvmStatic
-        external fun breakBlock(engine: Long)
+        external fun breakBlockNative(engine: Long)
         @JvmStatic
-        external fun placeBlock(engine: Long)
+        external fun placeBlockNative(engine: Long)
+
     }
 
-
-}
-
-class VoxelEngineRenderer() : GLSurfaceView.Renderer {
-    companion object {
-        private var startTime: Long = 0
-    }
-
-    override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        //TODO: Get a better way of setting width and height
-        // Note: This are the screen dimensions of a Pixel 5a
-        VoxelEngine.mEngine = VoxelEngine.initEngine(2400, 1080, 69, 5)
-    }
+    override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {}
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+        initGLNative(ptr, width, height)
         startTime = System.nanoTime()
+    }
+
+    fun update(deltaTime: Float) {
+        updateNative(ptr, deltaTime)
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        val deltaTime = (System.nanoTime()-startTime) / 1000000000.0f
+        val deltaTime = (System.nanoTime() - startTime) / 1000000000.0f
         startTime = System.nanoTime()
-        VoxelEngine.update(VoxelEngine.mEngine, deltaTime)
+        //Log.d("VoxelGame", "$deltaTime / ${1f / deltaTime}")
+        update(deltaTime)
+        drawFrameNative(ptr)
+    }
+
+    fun stopMoving() {
+        stopMovingNative(ptr)
+    }
+
+    fun moveAround(dx: Float, dy: Float, dz: Float) {
+        moveAroundNative(ptr, dx, dy, dz)
+    }
+
+    fun playerJump() {
+        playerJumpNative(ptr)
+    }
+
+    fun breakBlock() {
+        breakBlockNative(ptr)
+    }
+
+    fun isPaused(): Boolean {
+        return isPausedNative(ptr)
+    }
+
+    fun pauseGame() {
+        pauseGameNative(ptr)
+    }
+
+    fun resumeGame() {
+        resumeGameNative(ptr)
+    }
+
+    fun placeBlock() {
+        placeBlockNative(ptr)
+    }
+
+    fun lookAround(dx: Float, dy: Float) {
+        lookAroundNative(ptr, dx, dy)
     }
 }
