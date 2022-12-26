@@ -18,16 +18,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var voxelEngine: VoxelEngine
     private var rendererSet = false
 
-    private fun invSqrt(x: Float): Float {
-        var x = x
-        val xhalf = 0.5f * x
-        var i = java.lang.Float.floatToIntBits(x)
-        i = 0x5f3759df - (i shr 1)
-        x = java.lang.Float.intBitsToFloat(i)
-        x *= 1.5f - xhalf * x * x
-        return x
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 else -> {
                     val dx = (event.x / moveJoystick.width) - 0.5f
                     val dz = (event.y / moveJoystick.height) - 0.5f
-                    val a = invSqrt((dx * dx) + (dz * dz))
+                    val a = VoxelEngine.invSqrt((dx * dx) + (dz * dz))
                     voxelEngine.moveAround(dx * a, 0.0f, -dz * a)
                 }
             }
