@@ -14,41 +14,42 @@ class VoxelEngine : GLSurfaceView.Renderer {
         ptr = initEngineNative()
     }
 
-    private companion object {
+    companion object {
 
         @JvmStatic
-        external fun initEngineNative(): Long
+        private external fun initEngineNative(): Long
         @JvmStatic
-        external fun initGLNative(ptr: Long, width: Int, height: Int)
+        private external fun initGLNative(ptr: Long, width: Int, height: Int)
         @JvmStatic
-        external fun updateNative(ptr: Long, deltaTime: Float)
+        private external fun updateNative(ptr: Long, deltaTime: Float)
         @JvmStatic
-        external fun drawFrameNative(ptr: Long)
+        private external fun drawFrameNative(ptr: Long)
         @JvmStatic
-        external fun setColorNative(ptr: Long, red: Float, green: Float, blue: Float)
-        @JvmStatic
-        external fun resetGlResourcesNative(ptr: Long)
+        private external fun resetGlResourcesNative(ptr: Long)
 
         @JvmStatic
-        external fun pauseGameNative(ptr: Long)
+        private external fun pauseGameNative(ptr: Long)
         @JvmStatic
-        external fun resumeGameNative(ptr: Long)
+        private external fun resumeGameNative(ptr: Long)
         @JvmStatic
-        external fun isPausedNative(ptr: Long): Boolean
+        private external fun isPausedNative(ptr: Long): Boolean
 
         /* Player controls */
         @JvmStatic
-        external fun lookAroundNative(engine: Long, dx: Float, dy: Float)
+        private external fun lookAroundNative(engine: Long, dx: Float, dy: Float)
         @JvmStatic
-        external fun moveAroundNative(engine: Long, dx: Float, dy: Float, dz: Float)
+        private external fun moveAroundNative(engine: Long, dx: Float, dy: Float, dz: Float)
         @JvmStatic
-        external fun stopMovingNative(engine: Long)
+        private external fun stopMovingNative(engine: Long)
         @JvmStatic
-        external fun playerJumpNative(engine: Long)
+        private external fun playerJumpNative(engine: Long)
         @JvmStatic
-        external fun breakBlockNative(engine: Long)
+        private external fun breakBlockNative(engine: Long)
         @JvmStatic
-        external fun placeBlockNative(engine: Long)
+        private external fun placeBlockNative(engine: Long)
+
+        @JvmStatic
+        external fun invSqrt(num: Float): Float
 
     }
 
@@ -64,9 +65,6 @@ class VoxelEngine : GLSurfaceView.Renderer {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        //val deltaTime = (System.nanoTime() - startTime) / 1000000000.0f
-        //startTime = System.nanoTime()
-        //update(deltaTime)
         drawFrameNative(ptr)
     }
 
