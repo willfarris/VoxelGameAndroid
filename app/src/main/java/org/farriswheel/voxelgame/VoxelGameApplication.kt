@@ -12,4 +12,16 @@ class VoxelGameApplication: Application() {
         }
     }
     val mVoxelEngine: VoxelEngine = VoxelEngine()
+
+    init {
+        thread {
+            var startTime = System.nanoTime()
+            while(true) {
+                val deltaTime = (System.nanoTime() - startTime) / 1000000000.0f
+                startTime = System.nanoTime()
+                mVoxelEngine.update(deltaTime)
+                Thread.sleep(8L)
+            }
+        }
+    }
 }
