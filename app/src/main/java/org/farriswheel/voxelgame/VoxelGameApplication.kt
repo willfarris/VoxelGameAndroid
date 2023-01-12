@@ -12,4 +12,8 @@ class VoxelGameApplication: Application() {
         }
     }
     val mVoxelEngine: VoxelEngine = VoxelEngine()
+
+    init {
+        mVoxelEngine.startTerrainThread()
+    }
 }

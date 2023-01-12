@@ -19,6 +19,8 @@ class VoxelEngine : GLSurfaceView.Renderer {
         @JvmStatic
         private external fun initEngineNative(): Long
         @JvmStatic
+        private external fun startTerrainThreadNative(ptr: Long)
+        @JvmStatic
         private external fun initGLNative(ptr: Long, width: Int, height: Int)
         @JvmStatic
         private external fun updateNative(ptr: Long, deltaTime: Float)
@@ -58,6 +60,10 @@ class VoxelEngine : GLSurfaceView.Renderer {
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         initGLNative(ptr, width, height)
         startTime = System.nanoTime()
+    }
+
+    fun startTerrainThread() {
+        startTerrainThreadNative(ptr)
     }
 
     fun update(deltaTime: Float) {
