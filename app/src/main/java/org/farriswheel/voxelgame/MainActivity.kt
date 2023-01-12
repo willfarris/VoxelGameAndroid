@@ -9,6 +9,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import kotlin.concurrent.thread
+import kotlin.math.roundToLong
 
 
 class MainActivity : AppCompatActivity() {
@@ -58,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
         val moveJoystick = findViewById<ImageView>(R.id.moveJoystick)
         moveJoystick?.setOnTouchListener { v, event ->
-            when(event.action) {
+            when (event.action) {
                 1 -> voxelEngine.stopMoving()
                 else -> {
                     val dx = (event.x / moveJoystick.width) - 0.5f
@@ -112,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         if (rendererSet) {
             surface.onPause()
-            //voxelEngine.pauseGame()
+            voxelEngine.resetGlResources()
         }
     }
 

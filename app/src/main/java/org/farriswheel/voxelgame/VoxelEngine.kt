@@ -27,7 +27,7 @@ class VoxelEngine : GLSurfaceView.Renderer {
         @JvmStatic
         private external fun drawFrameNative(ptr: Long)
         @JvmStatic
-        private external fun setColorNative(ptr: Long, red: Float, green: Float, blue: Float)
+        private external fun resetGlResourcesNative(ptr: Long)
 
         @JvmStatic
         private external fun pauseGameNative(ptr: Long)
@@ -71,11 +71,11 @@ class VoxelEngine : GLSurfaceView.Renderer {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        val deltaTime = (System.nanoTime() - startTime) / 1000000000.0f
-        startTime = System.nanoTime()
-        //Log.d("VoxelGame", "$deltaTime / ${1f / deltaTime}")
-        update(deltaTime)
         drawFrameNative(ptr)
+    }
+
+    fun resetGlResources() {
+        resetGlResourcesNative(ptr)
     }
 
     fun stopMoving() {
