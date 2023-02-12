@@ -114,6 +114,7 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         if (rendererSet) {
             surface.onPause()
+            voxelEngine.pauseGame()
             voxelEngine.resetGlResources()
         }
     }
@@ -122,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         if (rendererSet) {
             surface.onResume()
-            //voxelEngine.resumeGame()
+            voxelEngine.resumeGame()
         }
         if (supportActionBar != null) {
             supportActionBar!!.hide()

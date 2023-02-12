@@ -16,11 +16,8 @@ class VoxelGameApplication: Application() {
     init {
         mVoxelEngine.startTerrainThread()
         thread {
-            var startTime = System.nanoTime()
             while(true) {
-                val deltaTime = (System.nanoTime() - startTime) / 1000000000.0f
-                startTime = System.nanoTime()
-                mVoxelEngine.update(deltaTime)
+                mVoxelEngine.update()
                 Thread.sleep(8L)
             }
         }

@@ -23,7 +23,7 @@ class VoxelEngine : GLSurfaceView.Renderer {
         @JvmStatic
         private external fun initGLNative(ptr: Long, width: Int, height: Int)
         @JvmStatic
-        private external fun updateNative(ptr: Long, deltaTime: Float)
+        private external fun updateNative(ptr: Long)
         @JvmStatic
         private external fun drawFrameNative(ptr: Long)
         @JvmStatic
@@ -66,8 +66,8 @@ class VoxelEngine : GLSurfaceView.Renderer {
         startTerrainThreadNative(ptr)
     }
 
-    fun update(deltaTime: Float) {
-        updateNative(ptr, deltaTime)
+    fun update() {
+        updateNative(ptr)
     }
 
     override fun onDrawFrame(gl: GL10?) {
