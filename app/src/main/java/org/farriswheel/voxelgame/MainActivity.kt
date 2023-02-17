@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         surface = findViewById(R.id.surfaceView)
         surface.setEGLContextClientVersion(3)
+        surface.setEGLConfigChooser(true)
         surface.setRenderer(voxelEngine)
 
         var touchStartX: Float? = null
